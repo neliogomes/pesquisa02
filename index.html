@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Pesquisa de Satisfação | Restaurante Três Pinheiros</title>
+
+  <style>
+    :root {
+      --blue-dark: #0f2a44;
+      --blue-accent: #1e88e5;
+      --gray-light: #f2f2f2;
+      --gray-border: #d0d0d0;
+      --text-dark: #222;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+
+    body {
+      min-height: 100vh;
+      background: var(--blue-dark);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 4vmin;
+    }
+
+    .container {
+      width: 100%;
+      max-width: 1200px;
+      background: var(--gray-light);
+      border-radius: 1.2rem;
+      padding: clamp(1.2rem, 3vmin, 2.5rem);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: clamp(1rem, 3vmin, 2rem);
+    }
+
+    .logo img {
+      width: clamp(140px, 25vmin, 260px);
+      height: auto;
+      display: block;
+      margin: 0 auto;
+    }
+
+    h1 {
+      text-align: center;
+      color: var(--text-dark);
+      font-size: clamp(1.4rem, 4vmin, 2.4rem);
+      line-height: 1.2;
+    }
+
+    .options {
+      display: flex;
+      flex-wrap: nowrap; /* Padrão: linha única (bom para Totem/PC) */
+      justify-content: space-between;
+      gap: clamp(0.6rem, 2vmin, 1.2rem);
+      width: 100%;
+    }
+
+    .option {
+      flex: 1 1 0;
+      min-width: 80px;
+      min-height: 140px;
+      background: #fff;
+      border: 3px solid var(--gray-border);
+      border-radius: 1rem;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 0.4rem;
+      cursor: pointer;
+      transition: transform 0.15s ease, border-color 0.15s ease, background 0.15s ease;
+    }
+
+    .option:focus-visible {
+      outline: 4px solid var(--blue-accent);
+      outline-offset: 4px;
+    }
+
+    .option.selected {
+      border-color: var(--blue-accent);
+      background: #eaf3ff;
+      transform: scale(1.05);
+    }
+
+    .emoji {
+      font-size: clamp(2.5rem, 7vmin, 4.5rem);
+      line-height: 1;
+    }
+
+    .label {
+      font-size: clamp(0.85rem, 2.2vmin, 1.1rem);
+      color: var(--text-dark);
+    }
+
+    .thank-you {
+      display: none;
+      width: 100%;
+      min-height: 60vh;
+      background: var(--blue-dark);
+      color: #fff;
+      border-radius: 1.2rem;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      text-align: center;
+      gap: 2rem;
+      animation: fadeIn 0.4s ease forwards;
+    }
+
+    .thank-you h2 {
+      font-size: clamp(1.6rem, 5vmin, 3rem);
+      line-height: 1.2;
+    }
+
+    .progress {
+      width: 80%;
+      max-width: 400px;
+      height: 8px;
+      background: rgba(255, 255, 255, 0.25);
+      border-radius: 4px;
+      overflow: hidden;
+    }
+
+    .progress-bar {
+      height: 100%;
+      width: 100%;
+      background: #fff;
+      transform: translateX(-100%);
+      animation: progress 5s linear forwards;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes progress {
+      from { transform: translateX(-100%); }
+      to { transform: translateX(0); }
+    }
+
+    /* --- ALTERAÇÃO A: Responsividade para Celulares --- */
+    @media (max-width: 480px) {
+      .options {
+        flex-wrap: wrap; /* Permite quebrar linha */
+      }
+      .option {
+        flex: 1 1 45%; /* Ocupa metade da linha (2 colunas) */
+        min-height: 110px; /* Ajuste leve na altura */
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container" id="formContainer">
+    <div class="logo">
+      <!-- Certifique-se que o arquivo logo.png existe na mesma pasta -->
+      <img src="logo.png" alt="Logomarca Restaurante Três Pinheiros">
+    </div>
+
+    <h1>Como foi sua experiência no Restaurante Três Pinheiros?</h1>
+
+    <form id="feedbackForm">
+      <input type="hidden" name="avaliacao" id="avaliacao">
+
+      <div class="options">
+        <button type="button" class="option" data-value="Ótima">
+          <span class="emoji">😍</span>
+          <span class="label">Ótima</span>
+        </button>
+
+        <button type="button" class="option" data-value="Boa">
+          <span class="emoji">🙂</span>
+          <span class="label">Boa</span>
+        </button>
+
+        <button type="button" class="option" data-value="Regular">
+          <span class="emoji">😐</span>
+          <span class="label">Regular</span>
+        </button>
+
+        <button type="button" class="option" data-value="Ruim">
+          <span class="emoji">😞</span>
+          <span class="label">Ruim</span>
+        </button>
+      </div>
+    </form>
+  </div>
+
+  <div class="thank-you" id="thankYou">
+    <h2>O Restaurante Três Pinheiros agradece o feedback!</h2>
+    <div class="progress">
+      <div class="progress-bar"></div>
+    </div>
+  </div>
+
+  <script>
+    const options = document.querySelectorAll('.option');
+    const avaliacaoInput = document.getElementById('avaliacao');
+    const formContainer = document.getElementById('formContainer');
+    const thankYou = document.getElementById('thankYou');
+    
+    // Variável para evitar múltiplos cliques seguidos
+    let isSubmitting = false;
+
+    // URL do seu script (versão mais recente fornecida)
+    const WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbyIlT-ajiLMpzd63u1ptdmN4RSwvS6fvj7eleEyaYjDClldKOHP3LSCihq0YGMYkHkm/exec';
+
+    function calcularTurno(date) {
+      const hour = date.getHours();
+      if (hour >= 8 && hour <= 15) return 'Dia';
+      if (hour >= 16 && hour <= 23) return 'Noite';
+      return 'Madrugada';
+    }
+
+    // --- ALTERAÇÃO B: Envio Robusto ---
+    function enviarDados(avaliacao) {
+      const now = new Date();
+      
+      const payload = {
+        avaliacao: avaliacao,
+        turno: calcularTurno(now),
+        data: now.toLocaleDateString('pt-BR'),
+        hora: now.toLocaleTimeString('pt-BR'),
+        timestamp: now.toISOString()
+      };
+
+      // mode: 'no-cors' -> Permite enviar dados para o Google sem erro de bloqueio no console
+      // keepalive: true -> Garante que o envio termine mesmo se o navegador fechar/recarregar
+      fetch(WEB_APP_URL, {
+        method: 'POST',
+        mode: 'no-cors', 
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload),
+        keepalive: true 
+      }).catch(err => console.error("Falha silenciosa no envio:", err));
+    }
+
+    function resetForm() {
+      options.forEach(btn => btn.classList.remove('selected'));
+      avaliacaoInput.value = '';
+      thankYou.style.display = 'none';
+      formContainer.style.display = 'flex';
+      // Libera para nova submissão
+      isSubmitting = false; 
+    }
+
+    options.forEach(button => {
+      button.addEventListener('click', () => {
+        // Se já estiver enviando, ignora novos cliques
+        if (isSubmitting) return; 
+        isSubmitting = true;
+
+        options.forEach(btn => btn.classList.remove('selected'));
+        button.classList.add('selected');
+
+        const value = button.dataset.value;
+        avaliacaoInput.value = value;
+
+        enviarDados(value);
+
+        formContainer.style.display = 'none';
+        thankYou.style.display = 'flex';
+
+        setTimeout(resetForm, 5000);
+      });
+    });
+  </script>
+</body>
+</html>
